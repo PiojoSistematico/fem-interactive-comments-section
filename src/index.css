@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Rubik";
+  font-weight: 400;
+  src: url("./assets/fonts/Rubik-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Rubik";
+  font-weight: 500;
+  src: url("./assets/fonts/Rubik-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Rubik";
+  font-weight: 700;
+  src: url("./assets/fonts/Rubik-Bold.ttf");
+}
