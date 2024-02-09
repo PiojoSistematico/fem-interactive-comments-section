@@ -1,6 +1,8 @@
 import { Button } from "react-aria-components";
 import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from "./Icons";
 import { useState } from "react";
+import CustomForm from "./CustomForm";
+import CustomModal from "./CustomModal";
 
 type User = {
   image: {
@@ -11,34 +13,27 @@ type User = {
 };
 
 type CommentProp = {
-  id: number;
-  content: string;
-  createdAt: string;
-  score: number;
-  user: User;
-  replies: number[];
+  id: string;
   comments: Comment[];
   currentUser: User;
+  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
 };
 
 type Comment = {
-  id: number;
+  id: string;
   content: string;
   createdAt: string;
   score: number;
   user: User;
-  replies: number[];
+  replies: string[];
+  original: boolean;
 };
 
 const CommentComponent: React.FunctionComponent<CommentProp> = ({
   id,
-  content,
-  createdAt,
-  score,
-  user,
-  replies,
   comments,
   currentUser,
+  setComments,
 }) => {
   const [isReplyOpen, setIsReplyOpen] = useState(false);
 
@@ -46,40 +41,60 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
     setIsReplyOpen(!isReplyOpen);
   }
 
+  function handleDelete(index: string): void {
+    setComments(comments.filter((elem) => elem.id != index));
+  }
+
+  function handleEdit(index: string): void {}
+
+  const comment = comments.filter((elem) => elem.id == id)[0];
+
   return (
     <>
       <article className="flex flex-col gap-4 rounded-md bg-neutral-5 p-4">
         <div className="flex flex-row items-center gap-4">
           <picture className="h-8 w-8">
-            <img src={`src/assets/${user.image.png}`} alt="Avatar" />
+            <img src={`src/assets/${comment.user.image.png}`} alt="Avatar" />
           </picture>
-          <span className="font-medium text-neutral-1">{user.username}</span>
-          {user.username == currentUser.username ? (
+          <span className="font-medium text-neutral-1">
+            {comment.user.username}
+          </span>
+          {comment.user.username == currentUser.username ? (
             <span className="bg-primary-1 px-1 text-sm text-neutral-5">
               You
             </span>
           ) : null}
-          <span>{createdAt}</span>
+          <span>{comment.createdAt}</span>
         </div>
-        <p>{content}</p>
+        <p>{comment.content}</p>
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-4 rounded-md bg-neutral-4 p-2">
             <Button>
               <IconPlus></IconPlus>
             </Button>
-            <span className="font-medium text-primary-1">{score}</span>
+            <span className="font-medium text-primary-1">{comment.score}</span>
             <Button>
               <IconMinus></IconMinus>
             </Button>
           </div>
           <div className="flex flex-row items-center gap-4">
-            {user.username == currentUser.username ? (
+            {comment.user.username == currentUser.username ? (
               <>
-                <Button className="flex flex-row items-center gap-2 font-medium text-primary-2">
+                {/* <Button
+                  onPress={() => handleDelete(comment.id)}
+                  className="flex flex-row items-center gap-2 font-medium text-primary-2"
+                >
                   <IconDelete></IconDelete>
                   <span>Delete</span>
-                </Button>
-                <Button className="flex flex-row items-center gap-2 font-medium text-primary-1">
+                </Button> */}
+                <CustomModal
+                  index={comment.id}
+                  handleDelete={handleDelete}
+                ></CustomModal>
+                <Button
+                  onPress={() => handleEdit(comment.id)}
+                  className="flex flex-row items-center gap-2 font-medium text-primary-1"
+                >
                   <IconEdit></IconEdit>
                   <span>Edit</span>
                 </Button>
@@ -97,43 +112,29 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
         </div>
       </article>
 
-      {replies && replies.length > 0 ? (
+      {comment.replies && comment.replies.length > 0 ? (
         <div className="flex flex-col gap-4 border-l-2 border-solid border-neutral-3 pl-4">
           {comments
-            .filter((elem) => replies.includes(elem.id))
+            .filter((elem) => comment.replies.includes(elem.id))
             .map((elem, index) => (
               <CommentComponent
                 key={index}
                 id={elem.id}
-                content={elem.content}
-                createdAt={elem.createdAt}
-                score={elem.score}
-                user={elem.user}
-                replies={elem.replies}
                 currentUser={currentUser}
                 comments={comments}
+                setComments={setComments}
               ></CommentComponent>
             ))}
         </div>
       ) : null}
 
       {isReplyOpen ? (
-        <form
-          action=""
-          className="flex flex-row items-start gap-4 rounded-md bg-neutral-5 p-4"
-        >
-          <picture className="h-12 w-12">
-            <img src={`src/assets/${currentUser.image.png}`} alt="Avatar" />
-          </picture>
-          <textarea
-            name=""
-            id=""
-            className="w-full rounded-md border-2 border-solid border-neutral-3 p-2"
-          ></textarea>
-          <Button className="rounded-md bg-primary-1 px-4 py-1 uppercase text-neutral-5">
-            Reply
-          </Button>
-        </form>
+        <CustomForm
+          currentUser={currentUser}
+          comments={comments}
+          setComments={setComments}
+          original={false}
+        ></CustomForm>
       ) : null}
     </>
   );
