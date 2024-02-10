@@ -30,17 +30,23 @@ type Comment = {
 };
 
 type FormTypes = {
+  type: string;
+  parent?: string;
   currentUser: User;
   comments: Comment[];
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
   original: boolean;
+  setIsReplyOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CustomForm: React.FunctionComponent<FormTypes> = ({
+  type,
+  parent,
   currentUser,
   comments,
   setComments,
   original,
+  setIsReplyOpen,
 }) => {
   const {
     register,
@@ -54,22 +60,46 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
   });
 
   async function onSubmit(data: TypeSchema) {
+    console.log(data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const newid: string = uuidv4();
 
-    setComments([
-      ...comments,
-      {
-        id: newid,
-        content: data.text,
-        createdAt: "1 min ago",
-        score: 1,
-        user: currentUser,
-        replies: [],
-        original: original,
-      },
-    ]);
+    if (type == "reply") {
+      const newParent: Comment = [...comments].filter(
+        (elem) => elem.id == parent,
+      )[0];
+      newParent.replies.push(newid);
+
+      setComments([
+        ...comments.filter((elem) => elem.id != parent),
+        {
+          id: newid,
+          content: data.text,
+          createdAt: "1 min ago",
+          score: 1,
+          user: currentUser,
+          replies: [],
+          original: original,
+        },
+        newParent,
+      ]);
+
+      setIsReplyOpen(false);
+    } else {
+      setComments([
+        ...comments,
+        {
+          id: newid,
+          content: data.text,
+          createdAt: "1 min ago",
+          score: 1,
+          user: currentUser,
+          replies: [],
+          original: original,
+        },
+      ]);
+    }
     reset();
   }
 
@@ -97,7 +127,7 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
           type="submit"
           className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 disabled:bg-neutral-2"
         >
-          Send
+          {type == "reply" ? "reply" : type == "edit" ? "update" : "send"}
         </button>
       </div>
     </form>

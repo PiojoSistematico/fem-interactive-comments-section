@@ -78,6 +78,7 @@ function App() {
             ></CommentComponent>
           ))}
         <CustomForm
+          type="default"
           currentUser={currentUser}
           comments={comments}
           setComments={setComments}

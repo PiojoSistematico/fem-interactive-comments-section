@@ -130,10 +130,13 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
 
       {isReplyOpen ? (
         <CustomForm
+          type="reply"
+          parent={comment.id}
           currentUser={currentUser}
           comments={comments}
           setComments={setComments}
           original={false}
+          setIsReplyOpen={setIsReplyOpen}
         ></CustomForm>
       ) : null}
     </>
