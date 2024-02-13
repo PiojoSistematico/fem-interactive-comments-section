@@ -1,6 +1,6 @@
-import { Button } from "react-aria-components";
+import { Button, Input } from "react-aria-components";
 import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from "./Icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CustomForm from "./CustomForm";
 import CustomModal from "./CustomModal";
 
@@ -35,7 +35,9 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
   currentUser,
   setComments,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const inputRef = useRef(null);
 
   function handleReply(): void {
     setIsReplyOpen(!isReplyOpen);
@@ -45,7 +47,16 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
     setComments(comments.filter((elem) => elem.id != index));
   }
 
-  function handleEdit(index: string): void {}
+  function handleUpdate(): void {
+    setComments([
+      ...comments.filter((elem) => elem.id != id),
+      {
+        ...comment,
+        content: inputRef.current.value,
+      },
+    ]);
+    setIsEditing(false);
+  }
 
   const comment = comments.filter((elem) => elem.id == id)[0];
 
@@ -66,7 +77,16 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
           ) : null}
           <span>{comment.createdAt}</span>
         </div>
-        <p>{comment.content}</p>
+        {isEditing ? (
+          <textarea
+            ref={inputRef}
+            defaultValue={comment.content}
+            autoFocus
+          ></textarea>
+        ) : (
+          <p>{comment.content}</p>
+        )}
+
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-4 rounded-md bg-neutral-4 p-2">
             <Button>
@@ -80,24 +100,28 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
           <div className="flex flex-row items-center gap-4">
             {comment.user.username == currentUser.username ? (
               <>
-                {/* <Button
-                  onPress={() => handleDelete(comment.id)}
-                  className="flex flex-row items-center gap-2 font-medium text-primary-2"
-                >
-                  <IconDelete></IconDelete>
-                  <span>Delete</span>
-                </Button> */}
-                <CustomModal
-                  index={comment.id}
-                  handleDelete={handleDelete}
-                ></CustomModal>
-                <Button
-                  onPress={() => handleEdit(comment.id)}
-                  className="flex flex-row items-center gap-2 font-medium text-primary-1"
-                >
-                  <IconEdit></IconEdit>
-                  <span>Edit</span>
-                </Button>
+                {isEditing ? (
+                  <button
+                    onClick={() => handleUpdate()}
+                    className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 disabled:bg-neutral-2"
+                  >
+                    update
+                  </button>
+                ) : (
+                  <>
+                    <CustomModal
+                      index={comment.id}
+                      handleDelete={handleDelete}
+                    ></CustomModal>
+                    <Button
+                      onPress={() => setIsEditing(!isEditing)}
+                      className="flex flex-row items-center gap-2 font-medium text-primary-1"
+                    >
+                      <IconEdit></IconEdit>
+                      <span>Edit</span>
+                    </Button>
+                  </>
+                )}
               </>
             ) : (
               <Button
@@ -111,6 +135,18 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
           </div>
         </div>
       </article>
+
+      {isReplyOpen ? (
+        <CustomForm
+          type="reply"
+          parent={comment.id}
+          currentUser={currentUser}
+          comments={comments}
+          setComments={setComments}
+          original={false}
+          setIsReplyOpen={setIsReplyOpen}
+        ></CustomForm>
+      ) : null}
 
       {comment.replies && comment.replies.length > 0 ? (
         <div className="flex flex-col gap-4 border-l-2 border-solid border-neutral-3 pl-4">
@@ -126,18 +162,6 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
               ></CommentComponent>
             ))}
         </div>
-      ) : null}
-
-      {isReplyOpen ? (
-        <CustomForm
-          type="reply"
-          parent={comment.id}
-          currentUser={currentUser}
-          comments={comments}
-          setComments={setComments}
-          original={false}
-          setIsReplyOpen={setIsReplyOpen}
-        ></CustomForm>
       ) : null}
     </>
   );

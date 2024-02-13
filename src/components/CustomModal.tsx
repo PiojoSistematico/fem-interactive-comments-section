@@ -47,7 +47,10 @@ const CustomModal: React.FunctionComponent<CustomModalProps> = ({
                   </Button>
                   <Button
                     className="w-full rounded-md bg-primary-2 px-4 py-2 text-center font-bold uppercase text-neutral-5"
-                    onPress={() => handleDelete(index)}
+                    onPress={() => {
+                      handleDelete(index);
+                      close;
+                    }}
                   >
                     Yes, delete
                   </Button>
