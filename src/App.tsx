@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import CommentComponent from "./components/Comment";
 import CustomForm from "./components/CustomForm";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import commentsData from "./data/comments.json";
+import currentUser from "./data/currentUser.json";
 
 type User = {
   image: {
@@ -21,69 +24,31 @@ type Comment = {
 };
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<User>({
-    image: {
-      png: "string",
-      webp: "string",
-    },
-    username: "string",
-  });
-
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: "string",
-      content: "string",
-      createdAt: "string",
-      score: 1,
-      user: {
-        image: {
-          png: "string",
-          webp: "string",
-        },
-        username: "string",
-      },
-      replies: [],
-      original: true,
-    },
-  ]);
-
-  useEffect(() => {
-    fetch("currentUser.json")
-      .then((res) => res.json())
-      .then((info) => setCurrentUser(info));
-    fetch("comments.json")
-      .then((res) => res.json())
-      .then((info) => setComments(info));
-  }, []);
-
-  /*   console.log("user>>>", currentUser);
-  console.log("comments>>>", comments);
-  console.log(
-    "filter>>>",
-    comments.filter((elem) => thread.includes(elem.id)),
-  ); */
+  const [comments, setComments] = useLocalStorage("data", commentsData);
 
   return (
     <>
-      <main className="flex flex-col gap-4 bg-neutral-4 p-8 font-rubik text-base font-normal text-neutral-2">
-        {comments
-          .filter((elem) => elem.original == true)
-          .map((elem, index) => (
-            <CommentComponent
-              key={index}
-              id={elem.id}
-              currentUser={currentUser}
-              comments={comments}
-              setComments={setComments}
-            ></CommentComponent>
-          ))}
-        <CustomForm
-          type="default"
-          currentUser={currentUser}
-          comments={comments}
-          setComments={setComments}
-          original={true}
-        ></CustomForm>
+      <main className="flex flex-row justify-center bg-neutral-4">
+        <div className="flex flex-col gap-4 p-8 font-rubik text-base font-normal text-neutral-2 md:w-8/12 md:max-w-[1000px]">
+          {comments
+            .filter((elem) => elem.original == true)
+            .map((elem, index) => (
+              <CommentComponent
+                key={index}
+                id={elem.id}
+                currentUser={currentUser}
+                comments={comments}
+                setComments={setComments}
+              ></CommentComponent>
+            ))}
+          <CustomForm
+            type="default"
+            currentUser={currentUser}
+            comments={comments}
+            setComments={setComments}
+            original={true}
+          ></CustomForm>
+        </div>
       </main>
     </>
   );

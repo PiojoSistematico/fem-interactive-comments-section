@@ -3,6 +3,7 @@ import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from "./Icons";
 import { useRef, useState } from "react";
 import CustomForm from "./CustomForm";
 import CustomModal from "./CustomModal";
+import Score from "./Score";
 
 type User = {
   image: {
@@ -62,8 +63,8 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
 
   return (
     <>
-      <article className="flex flex-col gap-4 rounded-md bg-neutral-5 p-4">
-        <div className="flex flex-row items-center gap-4">
+      <article className="relative flex flex-col gap-4 rounded-md bg-neutral-5 p-4">
+        <div className="flex flex-row items-center gap-4 md:pl-12">
           <picture className="h-8 w-8">
             <img src={`src/assets/${comment.user.image.png}`} alt="Avatar" />
           </picture>
@@ -79,25 +80,18 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
         </div>
         {isEditing ? (
           <textarea
+            className="md:pl-12"
             ref={inputRef}
             defaultValue={comment.content}
             autoFocus
           ></textarea>
         ) : (
-          <p>{comment.content}</p>
+          <p className="md:pl-12">{comment.content}</p>
         )}
 
         <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-4 rounded-md bg-neutral-4 p-2">
-            <Button>
-              <IconPlus></IconPlus>
-            </Button>
-            <span className="font-medium text-primary-1">{comment.score}</span>
-            <Button>
-              <IconMinus></IconMinus>
-            </Button>
-          </div>
-          <div className="flex flex-row items-center gap-4">
+          <Score id={id} comments={comments} setComments={setComments}></Score>
+          <div className="flex flex-row items-center gap-4 md:absolute md:right-8 md:top-5">
             {comment.user.username == currentUser.username ? (
               <>
                 {isEditing ? (
