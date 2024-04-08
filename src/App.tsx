@@ -32,6 +32,9 @@ function App() {
         <div className="flex flex-col gap-4 p-8 font-rubik text-base font-normal text-neutral-2 md:w-8/12 md:max-w-[1000px]">
           {comments
             .filter((elem) => elem.original == true)
+            .sort((obj1, obj2) =>
+              obj1.score < obj2.score ? 1 : obj1.score > obj2.score ? -1 : 0,
+            )
             .map((elem, index) => (
               <CommentComponent
                 key={index}

@@ -80,7 +80,7 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
         </div>
         {isEditing ? (
           <textarea
-            className="md:pl-12"
+            className="focus:outline-primary-1 focus-visible:outline-1 md:pl-12"
             ref={inputRef}
             defaultValue={comment.content}
             autoFocus
@@ -97,7 +97,7 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
                 {isEditing ? (
                   <button
                     onClick={() => handleUpdate()}
-                    className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 disabled:bg-neutral-2"
+                    className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 hover:opacity-70 focus-visible:opacity-70 disabled:bg-neutral-2"
                   >
                     update
                   </button>
@@ -109,7 +109,7 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
                     ></CustomModal>
                     <Button
                       onPress={() => setIsEditing(!isEditing)}
-                      className="flex flex-row items-center gap-2 font-medium text-primary-1"
+                      className="flex flex-row items-center gap-2 font-medium text-primary-1 hover:opacity-70 focus-visible:opacity-70"
                     >
                       <IconEdit></IconEdit>
                       <span>Edit</span>
@@ -120,7 +120,7 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
             ) : (
               <Button
                 onPress={handleReply}
-                className="flex flex-row items-center gap-2 font-medium text-primary-1"
+                className="flex flex-row items-center gap-2 font-medium text-primary-1 hover:opacity-70 focus-visible:opacity-70"
               >
                 <IconReply></IconReply>
                 <span>Reply</span>

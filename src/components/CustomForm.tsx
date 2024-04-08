@@ -113,7 +113,7 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
         {...register("text")}
         placeholder="Add a comment..."
         type="text"
-        className="w-full rounded-md border-2 border-solid border-neutral-3 p-2"
+        className="w-full rounded-md border-2 border-solid border-neutral-3 p-2 focus:outline-primary-1 focus-visible:outline-1"
       ></input>
       {errors.text && (
         <p className="p-1 text-sm text-primary-2">{errors.text.message}</p>
@@ -125,7 +125,7 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
         <button
           disabled={isSubmitting}
           type="submit"
-          className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 disabled:bg-neutral-2"
+          className="rounded-md bg-primary-1 px-6 py-2 uppercase text-neutral-5 hover:opacity-70 focus-visible:opacity-70 disabled:bg-neutral-2"
         >
           {type == "reply" ? "reply" : type == "edit" ? "update" : "send"}
         </button>

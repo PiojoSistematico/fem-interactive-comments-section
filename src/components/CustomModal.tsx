@@ -19,7 +19,7 @@ const CustomModal: React.FunctionComponent<CustomModalProps> = ({
 }) => {
   return (
     <DialogTrigger>
-      <Button className="flex flex-row items-center gap-2 font-medium text-primary-2">
+      <Button className="flex flex-row items-center gap-2 font-medium text-primary-2 hover:opacity-70 focus-visible:opacity-70">
         <IconDelete></IconDelete>
         <span>Delete</span>
       </Button>
@@ -40,13 +40,13 @@ const CustomModal: React.FunctionComponent<CustomModalProps> = ({
                 </p>
                 <div className="flex flex-row items-center gap-4">
                   <Button
-                    className="w-full rounded-md bg-neutral-2 px-4 py-2 text-center font-bold uppercase text-neutral-5"
+                    className="w-full rounded-md bg-neutral-2 px-4 py-2 text-center font-bold uppercase text-neutral-5 hover:opacity-70 focus-visible:opacity-70"
                     onPress={close}
                   >
                     No, cancel
                   </Button>
                   <Button
-                    className="w-full rounded-md bg-primary-2 px-4 py-2 text-center font-bold uppercase text-neutral-5"
+                    className="w-full rounded-md bg-primary-2 px-4 py-2 text-center font-bold uppercase text-neutral-5 hover:opacity-70 focus-visible:opacity-70"
                     onPress={() => {
                       handleDelete(index);
                       close;
