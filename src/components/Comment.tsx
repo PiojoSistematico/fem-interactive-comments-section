@@ -1,5 +1,5 @@
-import { Button, Input } from "react-aria-components";
-import { IconDelete, IconEdit, IconMinus, IconPlus, IconReply } from "./Icons";
+import { Button } from "react-aria-components";
+import { IconEdit, IconReply } from "./Icons";
 import { useRef, useState } from "react";
 import CustomForm from "./CustomForm";
 import CustomModal from "./CustomModal";
@@ -38,7 +38,7 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   function handleReply(): void {
     setIsReplyOpen(!isReplyOpen);
@@ -49,13 +49,16 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
   }
 
   function handleUpdate(): void {
-    setComments([
-      ...comments.filter((elem) => elem.id != id),
-      {
-        ...comment,
-        content: inputRef.current.value,
-      },
-    ]);
+    if (inputRef.current && inputRef.current.value) {
+      setComments([
+        ...comments.filter((elem) => elem.id != id),
+        {
+          ...comment,
+          content: inputRef.current.value,
+        },
+      ]);
+    }
+
     setIsEditing(false);
   }
 
@@ -66,7 +69,10 @@ const CommentComponent: React.FunctionComponent<CommentProp> = ({
       <article className="relative flex flex-col gap-4 rounded-md bg-neutral-5 p-4">
         <div className="flex flex-row items-center gap-4 md:pl-12">
           <picture className="h-8 w-8">
-            <img src={`src/assets/${comment.user.image.png}`} alt="Avatar" />
+            <img
+              src={`/${comment.user.image.png}`}
+              alt={`/${comment.user.image.png}`}
+            />
           </picture>
           <span className="font-medium text-neutral-1">
             {comment.user.username}

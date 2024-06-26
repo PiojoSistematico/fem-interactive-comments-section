@@ -10,15 +10,6 @@ export function useLocalStorage(key: string, value: any) {
     }
   });
 
-  /* function setLocalStorage(item: any) {
-    try {
-      setStoredValue(item);
-      window.localStorage.setItem(key, JSON.stringify(item));
-    } catch (error) {
-      console.log(error);
-    }
-  } */
-
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(storedValue));
   }, [storedValue]);

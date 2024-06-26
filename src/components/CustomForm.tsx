@@ -85,7 +85,9 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
         newParent,
       ]);
 
-      setIsReplyOpen(false);
+      if (setIsReplyOpen) {
+        setIsReplyOpen(false);
+      }
     } else {
       setComments([
         ...comments,
@@ -120,7 +122,7 @@ const CustomForm: React.FunctionComponent<FormTypes> = ({
       )}
       <div className="flex flex-row items-center justify-between">
         <picture className="h-8 w-8">
-          <img src={`src/assets/${currentUser.image.png}`} alt="Avatar" />
+          <img src={`/${currentUser.image.png}`} alt="Avatar" />
         </picture>
         <button
           disabled={isSubmitting}

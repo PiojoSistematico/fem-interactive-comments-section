@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import CommentComponent from "./components/Comment";
 import CustomForm from "./components/CustomForm";
 import { useLocalStorage } from "./hooks/useLocalStorage";
@@ -28,14 +27,14 @@ function App() {
 
   return (
     <>
-      <main className="flex flex-row justify-center bg-neutral-4">
+      <main className="flex min-h-screen flex-row justify-center bg-neutral-4">
         <div className="flex flex-col gap-4 p-8 font-rubik text-base font-normal text-neutral-2 md:w-8/12 md:max-w-[1000px]">
           {comments
-            .filter((elem) => elem.original == true)
-            .sort((obj1, obj2) =>
+            .filter((elem: Comment) => elem.original == true)
+            .sort((obj1: Comment, obj2: Comment) =>
               obj1.score < obj2.score ? 1 : obj1.score > obj2.score ? -1 : 0,
             )
-            .map((elem, index) => (
+            .map((elem: Comment, index: number) => (
               <CommentComponent
                 key={index}
                 id={elem.id}
